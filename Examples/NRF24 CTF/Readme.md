@@ -134,11 +134,11 @@ Stack After Overflow:
 
 ![image](https://github.com/user-attachments/assets/7fc990c7-63f8-4543-8a96-c421fd06e96c)
 
-- run and input the created pateerns
+- run and input the created pateerns 
 
 ![image](https://github.com/user-attachments/assets/c83c1a06-8c9d-4957-8a31-ce793a6345cc)
 
-- find the breaking value from EIP
+- find the offset value from EIP
 
 ![image](https://github.com/user-attachments/assets/16124415-3629-4efa-91b1-7b67032a5df7)
 
